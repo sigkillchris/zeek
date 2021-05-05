@@ -1,7 +1,4 @@
 ##! Enable logging of OCSP responses.
-#
-# This script is in policy and not loaded by default because OCSP logging
-# does not provide a lot of interesting information in most environments.
 
 module OCSP;
 

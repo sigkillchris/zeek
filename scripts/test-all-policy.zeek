@@ -41,7 +41,6 @@
 @load frameworks/notice/extend-email/hostnames.zeek
 @load files/unified2/__load__.zeek
 @load files/unified2/main.zeek
-@load files/x509/log-ocsp.zeek
 @load frameworks/packet-filter/shunt.zeek
 @load frameworks/software/version-changes.zeek
 @load frameworks/software/vulnerable.zeek
