@@ -1,7 +1,6 @@
 @load test-all-policy.zeek
 
 # Scripts which are commented out in test-all-policy.zeek.
-@load protocols/ssl/notary.zeek
 @load frameworks/control/controllee.zeek
 @load frameworks/control/controller.zeek
 @load frameworks/files/extract-all-files.zeek
