@@ -565,28 +565,30 @@ endif ()
 ########################################################################
 ## Look for external plugins to build in
 
-if( NOT ("${ZEEK_BUILTIN_PLUGINS_DIR}" STREQUAL "") AND IS_DIRECTORY ${ZEEK_BUILTIN_PLUGINS_DIR})
-    message (STATUS "Searching for external plugins in ${ZEEK_BUILTIN_PLUGINS_DIR}")
-    file(GLOB PLUGIN_DIRS CONFIGURE_DEPENDS "${ZEEK_BUILTIN_PLUGINS_DIR}/*/CMakeLists.txt")
+string(REPLACE "," " " _build_in_plugins "${ZEEK_INCLUDE_PLUGINS}")
+separate_arguments(_build_in_plugins)
+foreach(plugin_dir ${_build_in_plugins})
+    if ( NOT IS_ABSOLUTE "${plugin_dir}/CMakeLists.txt" )
+      message(FATAL_ERROR "Plugins to build in need to be defined with absolute path! ${plugin_dir}")
+    endif()
 
-    foreach(plugin_cmake ${PLUGIN_DIRS})
-        get_filename_component(plugin_dir ${plugin_cmake} DIRECTORY)
-        get_filename_component(plugin_name ${plugin_dir} NAME)
+    if ( NOT EXISTS "${plugin_dir}/CMakeLists.txt" )
+      message(FATAL_ERROR "No plugin found at ${plugin_dir}!")
+    endif()
 
-        # Create a list of plugin directories that will then be added in the src/CMakeLists.txt
-        list(APPEND BUILTIN_PLUGIN_LIST ${plugin_dir})
+    get_filename_component(plugin_name ${plugin_dir} NAME)
 
-        message(STATUS "  Building in plugin: ${plugin_name} (${plugin_dir})")
+    # Create a list of plugin directories that will then be added in the src/CMakeLists.txt
+    list(APPEND BUILTIN_PLUGIN_LIST ${plugin_dir})
 
-        if ( "${ZEEK_BUILTIN_PLUGINS}" STREQUAL "" )
-            set(ZEEK_BUILTIN_PLUGINS ${plugin_name})
-        else ()
-            set(ZEEK_BUILTIN_PLUGINS "${ZEEK_BUILTIN_PLUGINS}, ${plugin_name}")
-        endif ()
-    endforeach()
-else()
-    message (STATUS "No external plugins to build in")
-endif()
+    message(STATUS "  Building in plugin: ${plugin_name} (${plugin_dir})")
+
+    if ( "${ZEEK_BUILTIN_PLUGINS}" STREQUAL "" )
+        set(ZEEK_BUILTIN_PLUGINS ${plugin_name})
+    else ()
+        set(ZEEK_BUILTIN_PLUGINS "${ZEEK_BUILTIN_PLUGINS}, ${plugin_name}")
+    endif ()
+endforeach()
 
 ########################################################################
 ## Recurse on sub-directories
