@@ -416,6 +416,8 @@ unsigned int Specific_RE_Matcher::MemoryAllocation() const
 	{
 	unsigned int size = 0;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 	for ( int i = 0; i < ccl_list.length(); ++i )
 		size += ccl_list[i]->MemoryAllocation();
 
@@ -440,6 +442,7 @@ unsigned int Specific_RE_Matcher::MemoryAllocation() const
 		+ padded_sizeof(*any_ccl)
 		+ padded_sizeof(*accepted) // NOLINT(bugprone-sizeof-container)
 		+ accepted->size() * padded_sizeof(AcceptingSet::key_type);
+#pragma GCC diagnostic pop
 	}
 
 static RE_Matcher* matcher_merge(const RE_Matcher* re1, const RE_Matcher* re2,
